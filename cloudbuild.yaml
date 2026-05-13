@@ -1,0 +1,40 @@
+steps:
+  # 1. Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "$_LOCATION-docker.pkg.dev/boty-app/$_REPO_NAME/boty-whatsapp-server:$COMMIT_SHA",
+        ".",
+      ]
+
+  # 2. Push the image to Artifact Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "$_LOCATION-docker.pkg.dev/boty-app/$_REPO_NAME/boty-whatsapp-server:$COMMIT_SHA",
+      ]
+
+  # 3. Deploy to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - "run"
+      - "deploy"
+      - "boty-whatsapp-service"
+      - "--image"
+      - "$_LOCATION-docker.pkg.dev/boty-app/$_REPO_NAME/boty-whatsapp-server:$COMMIT_SHA"
+      - "--region"
+      - "$_LOCATION"
+      - "--platform"
+      - "managed"
+      - "--allow-unauthenticated" # Set to false if using an internal API gateway
+
+images:
+  - "$_LOCATION-docker.pkg.dev/boty-app/$_REPO_NAME/boty-whatsapp-server:$COMMIT_SHA"
+
+substitutions:
+  _LOCATION: us-central1
+  _REPO_NAME: boty-wapp
