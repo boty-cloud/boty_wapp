@@ -4,6 +4,7 @@ import pino from "pino";
 import type { ParsedMessage, RawBodyRequest, WebhookPayload } from "../types.js";
 import { isOptedOut, setOptedOut } from "../services/optout.js";
 import { saveIncomingMessage, saveOutgoingMessage } from "../services/conversations.js";
+import { getOrCreateUser } from "../services/users.js";
 import { routeMessage } from "../services/router.js";
 import { sendTextReply } from "../services/whatsapp.js";
 import { parseWebhookPayload } from "./parser.js";
@@ -40,7 +41,9 @@ async function processMessages(payload: WebhookPayload): Promise<void> {
   const io = getIO();
 
   for (const msg of messages) {
-    const contactName = contacts.get(msg.bsuid) ?? msg.bsuid;
+    const rawName = contacts.get(msg.bsuid) ?? msg.bsuid;
+    const user = await getOrCreateUser(msg.bsuid, rawName);
+    const contactName = user.name;
 
     await saveIncomingMessage(msg, contactName).catch((err) => {
       logger.error({ err, bsuid: msg.bsuid }, "Error al guardar mensaje entrante");

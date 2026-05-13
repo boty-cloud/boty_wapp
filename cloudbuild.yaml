@@ -6,7 +6,7 @@ steps:
       [
         "build",
         "-t",
-        "$_LOCATION-docker.pkg.dev/boty-app/boty-whatsapp-server:$COMMIT_SHA",
+        "$_LOCATION-docker.pkg.dev/boty-app/$_REPO_NAME/boty-whatsapp-server:$COMMIT_SHA",
         ".",
       ]
 
@@ -15,7 +15,7 @@ steps:
     args:
       [
         "push",
-        "$_LOCATION-docker.pkg.dev/boty-app/boty-whatsapp-server:$COMMIT_SHA",
+        "$_LOCATION-docker.pkg.dev/boty-app/$_REPO_NAME/boty-whatsapp-server:$COMMIT_SHA",
       ]
 
   # 3. Deploy to Cloud Run
@@ -26,7 +26,7 @@ steps:
       - "deploy"
       - "boty-whatsapp-service"
       - "--image"
-      - "$_LOCATION-docker.pkg.dev/boty-app/boty-whatsapp-server:$COMMIT_SHA"
+      - "$_LOCATION-docker.pkg.dev/boty-app/$_REPO_NAME/boty-whatsapp-server:$COMMIT_SHA"
       - "--region"
       - "$_LOCATION"
       - "--platform"
@@ -37,7 +37,7 @@ steps:
       - "1"
 
 images:
-  - "$_LOCATION-docker.pkg.dev/boty-app/boty-whatsapp-server:$COMMIT_SHA"
+  - "$_LOCATION-docker.pkg.dev/boty-app/$_REPO_NAME/boty-whatsapp-server:$COMMIT_SHA"
 
 substitutions:
   _LOCATION: us-central1

@@ -1,4 +1,5 @@
 import type { Request } from "express";
+import { User, UserInfo, UserMetadata } from 'firebase/auth';
 
 export interface RawBodyRequest extends Request {
   rawBody?: Buffer;
@@ -96,6 +97,14 @@ export interface ConversationSummary {
   unread: number;
 }
 
+export interface UserDocument {
+  phoneNumber: string;
+  name: string;
+  createdAt: string;
+  lastSeenAt: string;
+  optedOut: boolean;
+}
+
 export interface StoredMessage {
   id?: string;
   direction: "in" | "out";
@@ -105,4 +114,24 @@ export interface StoredMessage {
   mediaType?: "image" | "video" | "audio" | "document";
   fileName?: string;
   mediaUrl?: string;
+}
+
+export type UsersDocument = Omit<
+  User,
+  'delete' | 'getIdToken' | 'getIdTokenResult' | 'reload' | 'toJSON'
+> & {
+  uid: string;
+  email: string;
+  activeCompany?: string;
+  displayName: string;
+  emailVerified: boolean;
+  isAnonymous: boolean;
+  metadata: UserMetadata;
+  providerData: UserInfo[];
+  refreshToken: string;
+  tenantId: string;
+  phoneNumber: string;
+  photoURL: string;
+  providerId: string;
+
 }
