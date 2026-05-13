@@ -24,7 +24,7 @@ steps:
     args:
       - "run"
       - "deploy"
-      - "boty-whatsapp-service"
+      - "boty-wapp"
       - "--image"
       - "$_LOCATION-docker.pkg.dev/boty-app/$_REPO_NAME/boty-whatsapp-server:$COMMIT_SHA"
       - "--region"
