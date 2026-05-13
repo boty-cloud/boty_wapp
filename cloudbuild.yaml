@@ -1,3 +1,4 @@
+logsBucket: "gs://boty-app"
 steps:
   # 1. Build the container image
   - name: "gcr.io/cloud-builders/docker"
