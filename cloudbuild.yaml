@@ -30,7 +30,10 @@ steps:
       - "$_LOCATION"
       - "--platform"
       - "managed"
-      - "--allow-unauthenticated" # Set to false if using an internal API gateway
+      - "--allow-unauthenticated"
+      - "--session-affinity"
+      - "--min-instances"
+      - "1"
 
 images:
   - "$_LOCATION-docker.pkg.dev/boty-app/$_REPO_NAME/boty-whatsapp-server:$COMMIT_SHA"
