@@ -95,10 +95,22 @@ async function processMessages(payload: WebhookPayload): Promise<void> {
   }
 }
 
+function isWithinBusinessHours(): boolean {
+  const now = new Date(Date.now() - 3 * 60 * 60 * 1000);
+  const day = now.getUTCDay();
+  const hour = now.getUTCHours();
+  return day >= 1 && day <= 5 && hour >= 10 && hour < 18;
+}
+
+function scheduleFooter(): string {
+  if (isWithinBusinessHours()) return "\n\n¡Saludos!";
+  return "\n\nNuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs.\n¡Saludos!";
+}
+
 async function handleSupport(msg: ParsedMessage, contactName: string, isNew: boolean): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[SOPORTE] Procesando mensaje");
-  const greeting = isNew ? "¡Hola, soy Boty! " : "";
-  const reply = `${greeting}Transfiriendo mensaje al equipo de soporte... Nuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs. ¡Saludos!`;
+  const greeting = isNew ? "¡Hola, soy Boty!\n\n" : "";
+  const reply = `${greeting}Transfiriendo mensaje al equipo de soporte...${scheduleFooter()}`;
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 
@@ -112,8 +124,8 @@ async function handleSupport(msg: ParsedMessage, contactName: string, isNew: boo
 
 async function handleCommercial(msg: ParsedMessage, contactName: string, isNew: boolean): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[COMERCIAL] Procesando mensaje");
-  const greeting = isNew ? "¡Hola, soy Boty! " : "";
-  const reply = `${greeting}Para ver la información de nuestros módulos y/o precios, ingrese a: \nbotycloud.com\n; sino espere a ser atendido por un agente humano. Nuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs. ¡Saludos!`;
+  const greeting = isNew ? "¡Hola, soy Boty!\n\n" : "";
+  const reply = `${greeting}Para ver la información de nuestros módulos y/o precios, ingrese a:\nbotycloud.com\n\nSino espere a ser atendido por un agente humano.${scheduleFooter()}`;
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 
@@ -127,8 +139,8 @@ async function handleCommercial(msg: ParsedMessage, contactName: string, isNew: 
 
 async function handleOther(msg: ParsedMessage, contactName: string, isNew: boolean): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[OTHER] Procesando mensaje");
-  const greeting = isNew ? "¡Hola, soy Boty! " : "";
-  const reply = `${greeting}Para ver la información de nuestros módulos y/o precios, ingrese a botycloud.com; o escriba 'soporte' para ser transferido al equipo de soporte. Sino espere a ser atendido por un agente humano. Nuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs. ¡Saludos!`;
+  const greeting = isNew ? "¡Hola, soy Boty!\n\n" : "";
+  const reply = `${greeting}No entiendo tu consulta.\n\nPara ver la información de nuestros módulos y/o precios, ingrese a botycloud.com; o escriba 'soporte' para ser transferido al equipo de soporte.\n\nSino espere a ser atendido por un agente humano.${scheduleFooter()}`;
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 
