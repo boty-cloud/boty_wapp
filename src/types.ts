@@ -80,7 +80,7 @@ export interface ParsedMessage {
 }
 
 export interface RoutingDecision {
-  category: "support" | "commercial";
+  category: "support" | "commercial" | "other";
   matchedKeyword: string | null;
 }
 

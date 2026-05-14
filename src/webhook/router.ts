@@ -87,15 +87,17 @@ async function processMessages(payload: WebhookPayload): Promise<void> {
 
     if (routing.category === "support") {
       await handleSupport(msg, contactName);
-    } else {
+    } else if (routing.category === "commercial") {
       await handleCommercial(msg, contactName);
+    } else {
+      await handleOther(msg, contactName);
     }
   }
 }
 
 async function handleSupport(msg: ParsedMessage, contactName: string): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[SOPORTE] Procesando mensaje");
-  const reply = "Transfiriendo mensaje al equipo de soporte...";
+  const reply = "¡Hola, soy Boty! Transfiriendo mensaje al equipo de soporte... Nuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs. ¡Saludos!";
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 
@@ -109,7 +111,21 @@ async function handleSupport(msg: ParsedMessage, contactName: string): Promise<v
 
 async function handleCommercial(msg: ParsedMessage, contactName: string): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[COMERCIAL] Procesando mensaje");
-  const reply = "Para ver la información de nuestros módulos y/o precios, ingrese a botycloud.com!";
+  const reply = "¡Hola, soy Boty! Para ver la información de nuestros módulos y/o precios, ingrese a: \nbotycloud.com\n; sino espere a ser atendido por un agente humano. Nuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs. ¡Saludos!";
+  await sendTextReply(msg.bsuid, reply);
+  await saveOutgoingMessage(msg.bsuid, reply, "bot");
+
+  const io = getIO();
+  io.emit("new-message", {
+    bsuid: msg.bsuid,
+    contactName,
+    message: { direction: "out" as const, body: reply, sender: "bot" as const, timestamp: new Date().toISOString() },
+  });
+}
+
+async function handleOther(msg: ParsedMessage, contactName: string): Promise<void> {
+  logger.info({ bsuid: msg.bsuid }, "[OTHER] Procesando mensaje");
+  const reply = "¡Hola, soy Boty! No entiendo tu consulta. Para ver la información de nuestros módulos y/o precios, ingrese a botycloud.com; o escriba 'soporte' para ser transferido al equipo de soporte. Sino espere a ser atendido por un agente humano. Nuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs. ¡Saludos!";
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 

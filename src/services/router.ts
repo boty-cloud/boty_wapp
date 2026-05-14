@@ -12,10 +12,22 @@ const SUPPORT_KEYWORDS = [
   "error"
 ];
 
-const COMMERCIAL_KEYWORDS = ["buy", "price", "comprar", "precio"];
+const COMMERCIAL_KEYWORDS = [
+  "buy",
+  "price",
+  "comprar",
+  "precio",
+  "módulos",
+  "modulos",
+  "módulo",
+  "modulo",
+  "prices",
+  "servicios",
+  "servicio"
+];
 
 export function routeMessage(messageBody: string | null): RoutingDecision {
-  if (!messageBody) return { category: "commercial", matchedKeyword: null };
+  if (!messageBody) return { category: "other", matchedKeyword: null };
 
   const normalized = messageBody.toLowerCase();
   for (const keyword of SUPPORT_KEYWORDS) {
@@ -29,5 +41,5 @@ export function routeMessage(messageBody: string | null): RoutingDecision {
     }
   }
 
-  return { category: "commercial", matchedKeyword: null };
+  return { category: "other", matchedKeyword: null };
 }
