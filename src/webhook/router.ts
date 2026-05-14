@@ -109,8 +109,8 @@ function scheduleFooter(): string {
 
 async function handleSupport(msg: ParsedMessage, contactName: string, isNew: boolean): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[SOPORTE] Procesando mensaje");
-  const greeting = isNew ? "¡Hola, soy Boty!\n\n" : "";
-  const reply = `${greeting}Transfiriendo mensaje al equipo de soporte...${scheduleFooter()}`;
+  const greeting = isNew ? "¡Hola, soy Boty! 🤖\n\n" : "";
+  const reply = `${greeting}Transfiriendo tu consulta al equipo de soporte... Aguardá un momento, por favor.${scheduleFooter()}`;
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 
@@ -124,8 +124,8 @@ async function handleSupport(msg: ParsedMessage, contactName: string, isNew: boo
 
 async function handleCommercial(msg: ParsedMessage, contactName: string, isNew: boolean): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[COMERCIAL] Procesando mensaje");
-  const greeting = isNew ? "¡Hola, soy Boty!\n\n" : "";
-  const reply = `${greeting}Para ver la información de nuestros módulos y/o precios, ingrese a:\nbotycloud.com\n\nSino espere a ser atendido por un agente humano.${scheduleFooter()}`;
+  const greeting = isNew ? "¡Hola, soy Boty! 🤖\n\n" : "";
+  const reply = `${greeting}Podés ver toda la info sobre nuestros módulos y precios ingresando a botycloud.com.\n\nSi preferís hablar con alguien de nuestro equipo, aguardá un momento en línea y ya te atendemos.${scheduleFooter()}`;
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 
@@ -139,8 +139,8 @@ async function handleCommercial(msg: ParsedMessage, contactName: string, isNew: 
 
 async function handleOther(msg: ParsedMessage, contactName: string, isNew: boolean): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[OTHER] Procesando mensaje");
-  const greeting = isNew ? "¡Hola, soy Boty!\n\n" : "";
-  const reply = `${greeting}No entiendo tu consulta.\n\nPara ver la información de nuestros módulos y/o precios, ingrese a botycloud.com; o escriba 'soporte' para ser transferido al equipo de soporte.\n\nSino espere a ser atendido por un agente humano.${scheduleFooter()}`;
+  const greeting = isNew ? "¡Hola, soy Boty! 🤖\n\n" : "";
+  const reply = `${greeting}Para consultas comerciales, escribí 'comercial'. Si necesitás ayuda técnica, escribí 'soporte'.\n\nTambién podés ver nuestros módulos y precios en botycloud.com.\n\nO si preferís, aguardá en línea y en breve te atiende uno de nuestros asesores.${scheduleFooter()}`;
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 
