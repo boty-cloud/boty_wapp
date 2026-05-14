@@ -7,7 +7,7 @@ const COLLECTION = "users";
 export async function getOrCreateUser(
   phoneNumber: string,
   name: string,
-): Promise<UserDocument> {
+): Promise<UserDocument & { isNew: boolean }> {
   const docRef = db.collection(COLLECTION).doc(phoneNumber);
   const doc = await docRef.get();
 
@@ -27,6 +27,7 @@ export async function getOrCreateUser(
       createdAt: data.createdAt,
       lastSeenAt: updates.lastSeenAt as string,
       optedOut: data.optedOut ?? false,
+      isNew: false,
     };
   }
 
@@ -39,7 +40,7 @@ export async function getOrCreateUser(
     optedOut: false,
   };
   await docRef.set(user);
-  return user;
+  return { ...user, isNew: true };
 }
 
 export async function getUser(phoneNumber: string): Promise<UserDocument | null> {

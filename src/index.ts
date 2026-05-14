@@ -2,6 +2,7 @@ import "dotenv/config";
 
 import express from "express";
 import { createServer } from "node:http";
+import { resolve } from "node:path";
 import { Server } from "socket.io";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
@@ -32,6 +33,10 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(webhookRouter);
 app.use(monitorRouter);
+
+app.get("/favicon.ico", (_req, res) => {
+  res.sendFile(resolve(__dirname, "favicon.ico"));
+});
 
 app.get('/', (req, res) => {
   res.send('Boty Server is live and reaching your local machine!');

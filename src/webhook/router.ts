@@ -44,7 +44,7 @@ async function processMessages(payload: WebhookPayload): Promise<void> {
 
   for (const msg of messages) {
     const rawName = contacts.get(msg.bsuid) ?? msg.bsuid;
-    const user = await getOrCreateUser(msg.bsuid, rawName);
+    const { isNew, ...user } = await getOrCreateUser(msg.bsuid, rawName);
     const contactName = user.name;
 
     await saveIncomingMessage(msg, contactName).catch((err) => {
@@ -86,18 +86,19 @@ async function processMessages(payload: WebhookPayload): Promise<void> {
     );
 
     if (routing.category === "support") {
-      await handleSupport(msg, contactName);
+      await handleSupport(msg, contactName, isNew);
     } else if (routing.category === "commercial") {
-      await handleCommercial(msg, contactName);
+      await handleCommercial(msg, contactName, isNew);
     } else {
-      await handleOther(msg, contactName);
+      await handleOther(msg, contactName, isNew);
     }
   }
 }
 
-async function handleSupport(msg: ParsedMessage, contactName: string): Promise<void> {
+async function handleSupport(msg: ParsedMessage, contactName: string, isNew: boolean): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[SOPORTE] Procesando mensaje");
-  const reply = "¡Hola, soy Boty! Transfiriendo mensaje al equipo de soporte... Nuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs. ¡Saludos!";
+  const greeting = isNew ? "¡Hola, soy Boty! " : "";
+  const reply = `${greeting}Transfiriendo mensaje al equipo de soporte... Nuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs. ¡Saludos!`;
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 
@@ -109,9 +110,10 @@ async function handleSupport(msg: ParsedMessage, contactName: string): Promise<v
   });
 }
 
-async function handleCommercial(msg: ParsedMessage, contactName: string): Promise<void> {
+async function handleCommercial(msg: ParsedMessage, contactName: string, isNew: boolean): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[COMERCIAL] Procesando mensaje");
-  const reply = "¡Hola, soy Boty! Para ver la información de nuestros módulos y/o precios, ingrese a: \nbotycloud.com\n; sino espere a ser atendido por un agente humano. Nuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs. ¡Saludos!";
+  const greeting = isNew ? "¡Hola, soy Boty! " : "";
+  const reply = `${greeting}Para ver la información de nuestros módulos y/o precios, ingrese a: \nbotycloud.com\n; sino espere a ser atendido por un agente humano. Nuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs. ¡Saludos!`;
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 
@@ -123,9 +125,10 @@ async function handleCommercial(msg: ParsedMessage, contactName: string): Promis
   });
 }
 
-async function handleOther(msg: ParsedMessage, contactName: string): Promise<void> {
+async function handleOther(msg: ParsedMessage, contactName: string, isNew: boolean): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[OTHER] Procesando mensaje");
-  const reply = "¡Hola, soy Boty! No entiendo tu consulta. Para ver la información de nuestros módulos y/o precios, ingrese a botycloud.com; o escriba 'soporte' para ser transferido al equipo de soporte. Sino espere a ser atendido por un agente humano. Nuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs. ¡Saludos!";
+  const greeting = isNew ? "¡Hola, soy Boty! " : "";
+  const reply = `${greeting}Para ver la información de nuestros módulos y/o precios, ingrese a botycloud.com; o escriba 'soporte' para ser transferido al equipo de soporte. Sino espere a ser atendido por un agente humano. Nuestro horario de atención al cliente es de lunes a viernes de 10 a 18hs. ¡Saludos!`;
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 
