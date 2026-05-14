@@ -35,7 +35,9 @@ webhookRouter.post("/webhook", (req, res) => {
 });
 
 async function processMessages(payload: WebhookPayload): Promise<void> {
+  logger.info({ payload }, "Payload recibido");
   const { messages, contacts } = parseWebhookPayload(payload);
+  logger.info({ messages, contacts }, "Payload parseado");
   if (!messages.length) return;
 
   const io = getIO();
