@@ -23,7 +23,8 @@ const COMMERCIAL_KEYWORDS = [
   "modulo",
   "prices",
   "servicios",
-  "servicio"
+  "servicio",
+  "comercial"
 ];
 
 export function routeMessage(messageBody: string | null): RoutingDecision {

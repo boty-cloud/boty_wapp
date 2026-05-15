@@ -125,7 +125,7 @@ async function handleSupport(msg: ParsedMessage, contactName: string, isNew: boo
 async function handleCommercial(msg: ParsedMessage, contactName: string, isNew: boolean): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[COMERCIAL] Procesando mensaje");
   const greeting = isNew ? "¡Hola, soy Boty! 🤖\n\n" : "";
-  const reply = `${greeting}Podés ver toda la info sobre nuestros módulos y precios ingresando a botycloud.com.\n\nSi preferís hablar con alguien de nuestro equipo, aguardá un momento en línea y ya te atendemos.${scheduleFooter()}`;
+  const reply = `${greeting}Podés ver toda la info sobre nuestros módulos y precios ingresando a botycloud.com.${isNew ? '\n\nSi preferís hablar con alguien de nuestro equipo, aguardá un momento en línea y ya te atendemos.' : ''}${scheduleFooter()}`;
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 
@@ -140,7 +140,7 @@ async function handleCommercial(msg: ParsedMessage, contactName: string, isNew: 
 async function handleOther(msg: ParsedMessage, contactName: string, isNew: boolean): Promise<void> {
   logger.info({ bsuid: msg.bsuid }, "[OTHER] Procesando mensaje");
   const greeting = isNew ? "¡Hola, soy Boty! 🤖\n\n" : "";
-  const reply = `${greeting}Para consultas comerciales, escribí 'comercial'. Si necesitás ayuda técnica, escribí 'soporte'.\n\nTambién podés ver nuestros módulos y precios en botycloud.com.\n\nO si preferís, aguardá en línea y en breve te atiende uno de nuestros asesores.${scheduleFooter()}`;
+  const reply = `${greeting}Para consultas comerciales, escribí 'comercial'. Si necesitás ayuda técnica, escribí 'soporte'.${isNew ? '\n\nTambién podés ver nuestros módulos y precios en botycloud.com.\n\nO si preferís, aguardá en línea y en breve te atiende uno de nuestros asesores.' : ''}${scheduleFooter()}`;
   await sendTextReply(msg.bsuid, reply);
   await saveOutgoingMessage(msg.bsuid, reply, "bot");
 
